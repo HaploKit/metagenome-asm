@@ -16,6 +16,25 @@ Subsequently, pull down the scripts and modify `HiFiBooster.sh` or `MetaBooster.
 The final assembly result is `assembly.fa`.
 
 
-One could run the code on test data (simulated data of low complexity) here: https://drive.google.com/file/d/14RGy8yhUtW5GJeY053RCirXIM2njrIQR/view?usp=sharing 
+One could run the code on test data here (simulated data of low complexity): https://drive.google.com/file/d/14RGy8yhUtW5GJeY053RCirXIM2njrIQR/view?usp=sharing 
+
 Here is the corresponding reference genomes: https://drive.google.com/file/d/1bOUrBVsRN-QqkmatomD4hZAEI7H28iB5/view?usp=sharing
+
+## Running and options
+The format of input read file should be FASTA or FASTQ (or gzip file). The `-i` and `-g ` parameters are required. Other parameters are optional.
+Please run `sh run.sh -h` to get details of parameters setting.
+```
+Usage: run.sh [options] -i rawReads -g genomesize -o out -p sequencingPlatform -m pipeline
+
+Input:
+  rawReads:                         input long reads
+  genomesize:                       estimated genome size
+  out:                              directory where to output the results
+  sequencingPlatform:               long read sequencing platform: PacBio (-p pb) or Oxford Nanopore (-p ont)
+  pipeline:                         which pipeline to run: MetaBooster (-m MetaBooster) or HiFiBooster (-m HiFiBooster)
+
+Options:
+  --threads INT, -t INT:            Number of processes to run in parallel (default: 8).
+  --help, -h:                       Print this help message.
+```
 
