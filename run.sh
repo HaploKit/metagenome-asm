@@ -11,16 +11,16 @@ function print_help() {
   echo "Author: Xiao Luo"
   echo "Date:   Mar 2022"
   echo ""
-  echo "	Input:"
+  echo "  Input:"
   echo "  rawReads:                         input long reads"
-  echo "  genomesize:                       estimated genome size"
-  echo "	out:                              directory where to output the results"
+  echo "  genomesize:                       estimated genome size (e.g. 3g/30m/300k)"
+  echo "  out:                              directory where to output the results"
   echo "  sequencingPlatform:               long read sequencing platform: PacBio (-p pb) or Oxford Nanopore (-p ont)"
   echo "  pipeline:                         which pipeline to run: MetaBooster (-m MetaBooster) or HiFiBooster (-m HiFiBooster)"
   echo ""
-  echo "	Options:"
-  echo "	--threads INT, -t INT:            Number of processes to run in parallel (default: 8)."
-  echo "	--help, -h:                       Print this help message."
+  echo "  Options:"
+  echo "  --threads INT, -t INT:            number of processes to run in parallel (default: 8)"
+  echo "  --help, -h:                       print this help message"
   exit 1
 }
 
@@ -160,11 +160,11 @@ fi
 # if [[ $pipeline == "MetaBooster" ]];then
 if [[ $platform == "pb" ]];then
   # Run VeChat for error correction
-  vechat $raw_read  -t $threads  --platform $platform -o $outdir/reads.vechat_corrected.fa
+  vechat $raw_reads  -t $threads  --platform $platform -o $outdir/reads.vechat_corrected.fa
 
   # Run Canu for error correction
   rm -rf $outdir/canu
-  canu -p out -d $outdir/canu  useGrid=false rawErrorRate=0.2 genomeSize=$genomesize  -pacbio $raw_read
+  canu -p out -d $outdir/canu  useGrid=false rawErrorRate=0.2 genomeSize=$genomesize  -pacbio $raw_reads
   zcat $outdir/canu/out.trimmedReads.fasta.gz >$outdir/xx
   cat $outdir/reads.vechat_corrected.fa $outdir/xx >$outdir/reads.merged.fa
   rm $outdir/xx
@@ -181,11 +181,11 @@ if [[ $platform == "pb" ]];then
   
 else #ONT
   # Run VeChat for error correction
-  vechat $raw_read  -t $threads  --platform $platform -o $outdir/reads.vechat_corrected.fa
+  vechat $raw_reads  -t $threads  --platform $platform -o $outdir/reads.vechat_corrected.fa
 
   # Run Canu for error correction
   rm -rf $outdir/canu
-  canu -p out -d $outdir/canu  useGrid=false rawErrorRate=0.2 genomeSize=$genomesize  -nanopore $raw_read
+  canu -p out -d $outdir/canu  useGrid=false rawErrorRate=0.2 genomeSize=$genomesize  -nanopore $raw_reads
   zcat $outdir/canu/out.trimmedReads.fasta.gz >$outdir/xx
   cat $outdir/reads.vechat_corrected.fa $outdir/xx >$outdir/reads.merged.fa
   rm $outdir/xx
