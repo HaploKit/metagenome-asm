@@ -10,31 +10,47 @@ MetaBooster / HiFiBooster relies on the following dependencies:
 - [VeChat](https://github.com/HaploKit/vechat)
 - [Canu](https://github.com/marbl/canu)
 
-After installing VeChat and Canu, add 'vechat' and 'canu'
-
-Subsequently, pull down the scripts and modify `HiFiBooster.sh` or `MetaBooster.sh` for your own use.
-The final assembly result is `assembly.fa`.
-
-
-One could run the code on test data here (simulated data of low complexity): https://drive.google.com/file/d/14RGy8yhUtW5GJeY053RCirXIM2njrIQR/view?usp=sharing 
-
-Here is the corresponding reference genomes: https://drive.google.com/file/d/1bOUrBVsRN-QqkmatomD4hZAEI7H28iB5/view?usp=sharing
+After installing VeChat and Canu, add `vechat` and `canu` to your PATH, and make sure `vechat -h` and `canu -h` can run correctly. Subsequently, pull down the scripts and run `sh run.sh -h` for details.
 
 ## Running and options
 The format of input read file should be FASTA or FASTQ (or gzip file). The `-i` and `-g ` parameters are required. Other parameters are optional.
 Please run `sh run.sh -h` to get details of parameters setting.
 ```
-Usage: run.sh [options] -i rawReads -g genomesize -o out -p sequencingPlatform -m pipeline
+Usage: sh run.sh [options] -i rawReads -g genomesize -o out -p sequencingPlatform -m pipeline
 
 Input:
   rawReads:                         input long reads
   genomesize:                       estimated genome size
   out:                              directory where to output the results
-  sequencingPlatform:               long read sequencing platform: PacBio (-p pb) or Oxford Nanopore (-p ont)
+  sequencingPlatform:               long read sequencing platform: PacBio CLR (-p pb) or Oxford Nanopore (-p ont)
   pipeline:                         which pipeline to run: MetaBooster (-m MetaBooster) or HiFiBooster (-m HiFiBooster)
 
 Options:
   --threads INT, -t INT:            Number of processes to run in parallel (default: 8).
   --help, -h:                       Print this help message.
 ```
+
+
+## Examples
+
+One can test the `run.sh` program using the small PacBio CLR reads file `example/reads.fa`. Please use the absolute path of `strainline.sh` when running the program.
+- PacBio CLR reads
+```
+cd example
+/abspath/Strainline/src/strainline.sh -i reads.fa -o out -p pb -k 20 -t 32
+```
+
+- ONT reads
+```
+/abspath/Strainline/src/strainline.sh -i reads.fa -o out -p ont -t 32
+```
+
+One could run the code on the simulated data of low complexity. Here is the raw reads: https://drive.google.com/file/d/14RGy8yhUtW5GJeY053RCirXIM2njrIQR/view?usp=sharing 
+
+Here is the corresponding reference genomes: https://drive.google.com/file/d/1bOUrBVsRN-QqkmatomD4hZAEI7H28iB5/view?usp=sharing
+
+All benchmarking datasets used in the manuscript can be seen here: https://zenodo.org/record/5830706#.YiRAWxNBzUK
+
+## Citation
+
 
