@@ -7,16 +7,16 @@ Benchmarking experiments on both simulated and real sequencing data demonstrate 
 
 ## Installation and dependencies
 MetaBooster / HiFiBooster relies on the following dependencies:
-- [VeChat](https://github.com/HaploKit/vechat)
-- [Canu](https://github.com/marbl/canu)
+- [VeChat >= v1.1.0](https://github.com/HaploKit/vechat)
+- [Canu >= v2.1](https://github.com/marbl/canu)
 
-After installing VeChat and Canu, add `vechat` and `canu` to your PATH, and make sure `vechat -h` and `canu -h` can run correctly. Subsequently, pull down the scripts and run `sh run.sh -h` for details.
+After installing VeChat and Canu, add `vechat` and `canu` to your PATH, and make sure `vechat -h` and `canu -h` can run correctly. Subsequently, pull down the scripts and run `metagenome-asm -h` for details.
 
 ## Running and options
-The format of input read file should be FASTA or FASTQ (or gzip file). The `-i` and `-g ` parameters are required. Other parameters are optional.
-Please run `sh run.sh -h` to get details of parameters setting.
+The format of input read file should be FASTA or FASTQ (or gzip file). The `-i` and `-g` parameters are required. Other parameters are optional.
+Please run `metagenome-asm -h` to get details of parameters setting.
 ```
-Usage: sh run.sh [options] -i rawReads -g genomesize -o out -p sequencingPlatform -m pipeline
+Usage: metagenome-asm [options] -i rawReads -g genomesize -o out -p sequencingPlatform -m pipeline
 
 Input:
   rawReads:                         input long reads
@@ -33,19 +33,18 @@ Options:
 
 ## Examples
 
-One can test the `run.sh` program using the small PacBio CLR reads file `example/reads.fa`. Please use the absolute path of `strainline.sh` when running the program.
+One can test the `metagenome-asm` program using the small PacBio CLR reads file `example/reads.fa.gz`. 
 - PacBio CLR reads
 ```
-cd example
-/abspath/Strainline/src/strainline.sh -i reads.fa -o out -p pb -k 20 -t 32
+./metagenome-asm -i example/reads.fa.gz -g 49k -o out -p pb 
 ```
 
 - ONT reads
 ```
-/abspath/Strainline/src/strainline.sh -i reads.fa -o out -p ont -t 32
+./metagenome-asm -i example/reads.fa.gz -g 49k -o out -p ont
 ```
 
-One could run the code on the simulated data of low complexity. Here is the raw reads: https://drive.google.com/file/d/14RGy8yhUtW5GJeY053RCirXIM2njrIQR/view?usp=sharing 
+In addition, one could run the code on the simulated data of low complexity. Here is the raw reads: https://drive.google.com/file/d/14RGy8yhUtW5GJeY053RCirXIM2njrIQR/view?usp=sharing 
 
 Here is the corresponding reference genomes: https://drive.google.com/file/d/1bOUrBVsRN-QqkmatomD4hZAEI7H28iB5/view?usp=sharing
 
