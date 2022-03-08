@@ -18,9 +18,16 @@ function print_help() {
   echo "  sequencingPlatform:               long read sequencing platform: PacBio (-p pb) or Oxford Nanopore (-p ont)"
   echo "  pipeline:                         which pipeline to run: MetaBooster (-m MetaBooster) or HiFiBooster (-m HiFiBooster)"
   echo ""
-  echo "  Options:"
-  echo "  --threads INT, -t INT:            number of processes to run in parallel (default: 8)"
-  echo "  --help, -h:                       print this help message"
+  echo "  Options for setting VeChat:"
+
+  echo "  --split  BOOL             split target sequences into chunks (default: False)"
+  echo "  --split-size INT          split target sequences into chunks of desired size in lines, only valid when using --split (default: 1000000)"
+  echo "  --scrub BOOL              scrub chimeric reads (default: False)"
+  echo "  --base BOOL               perform base level alignment when computing read overlaps in the first cycle of VeChat (default: False)"
+  echo "  --min-identity-cns FLOAT  minimum sequence identity between read overlaps in the consensus round (default: 0.99)"
+
+  echo "  --threads INT, -t INT:    number of processes to run in parallel (default: 8)"
+  echo "  --help, -h:               print this help message"
   exit 1
 }
 
@@ -32,6 +39,12 @@ outdir="out"
 
 platform="pb"
 pipeline="MetaBooster"
+
+split="False"
+splitsize=1000000
+scrub="False"
+base="False"
+min_identity_cns=0.99
 #Print help if no argument specified
 if [[ "$1" == "" ]]; then
   print_help
@@ -115,6 +128,66 @@ while [[ "$1" != "" ]]; do
     fi ;;
     esac
     ;;
+  "--split")
+    case "$2" in
+    "")
+      echo "Error: $1 expects an argument"
+      exit 1
+      ;;
+    *)
+      split="$2"
+      shift 2
+      ;;
+    esac
+    ;;
+  "--split-size")
+    case "$2" in
+    "")
+      echo "Error: $1 expects an argument"
+      exit 1
+      ;;
+    *)
+      splitsize="$2"
+      shift 2
+      ;;
+    esac
+    ;;
+  "--base")
+    case "$2" in
+    "")
+      echo "Error: $1 expects an argument"
+      exit 1
+      ;;
+    *)
+      base="$2"
+      shift 2
+      ;;
+    esac
+    ;;
+  "--scrub")
+    case "$2" in
+    "")
+      echo "Error: $1 expects an argument"
+      exit 1
+      ;;
+    *)
+      scrub="$2"
+      shift 2
+      ;;
+    esac
+    ;;
+  "--min-identity-cns")
+    case "$2" in
+    "")
+      echo "Error: $1 expects an argument"
+      exit 1
+      ;;
+    *)
+      min_identity_cns="$2"
+      shift 2
+      ;;
+    esac
+    ;;
   "--threads" | "-t")
     case "$2" in
     "")
@@ -157,10 +230,21 @@ else
  exit
 fi
 
-# if [[ $pipeline == "MetaBooster" ]];then
+# Run VeChat for error correction
+vechat_cmd="vechat "$raw_reads"  -t "$threads"  -u --platform "$platform"  -o "$outdir"/reads.vechat_corrected.fa --min-identity-cns "$min_identity_cns
+if [[ $split == "True" ]];then
+  vechat_cmd=$vechat_cmd" --split --split-size "$split-size
+fi
+if [[ $scrub == "True" ]];then
+  vechat_cmd=$vechat_cmd"  --scrub "
+fi 
+if [[ $base == "True" ]];then
+  vechat_cmd=$vechat_cmd"  --base "
+fi 
+
+eval $vechat_cmd
+  
 if [[ $platform == "pb" ]];then
-  # Run VeChat for error correction
-  vechat $raw_reads  -t $threads  --platform $platform -o $outdir/reads.vechat_corrected.fa
 
   # Run Canu for error correction
   rm -rf $outdir/canu
@@ -180,9 +264,6 @@ if [[ $platform == "pb" ]];then
   fi
   
 else #ONT
-  # Run VeChat for error correction
-  vechat $raw_reads  -t $threads  --platform $platform -o $outdir/reads.vechat_corrected.fa
-
   # Run Canu for error correction
   rm -rf $outdir/canu
   canu -p out -d $outdir/canu  useGrid=false rawErrorRate=0.2 genomeSize=$genomesize  -nanopore $raw_reads

@@ -10,11 +10,11 @@ MetaBooster / HiFiBooster relies on the following dependencies:
 - [VeChat >= v1.1.0](https://github.com/HaploKit/vechat)
 - [Canu >= v2.1](https://github.com/marbl/canu)
 
-After installing VeChat and Canu, add `vechat` and `canu` to your PATH, and make sure `vechat -h` and `canu -h` can run correctly. Subsequently, pull down the scripts and run `metagenome-asm -h` for details.
+After installing VeChat and Canu, add `vechat` and `canu` to your PATH, and make sure `vechat -h` and `canu -h` can run correctly. Subsequently, pull down the scripts and run `./metagenome-asm -h` for details.
 
 ## Running and options
 The format of input read file should be FASTA or FASTQ (or gzip file). The `-i` and `-g` parameters are required. Other parameters are optional.
-Please run `metagenome-asm -h` to get details of parameters setting.
+Please run `./metagenome-asm -h` to get details of parameters setting.
 ```
 Usage: metagenome-asm [options] -i rawReads -g genomesize -o out -p sequencingPlatform -m pipeline
 
@@ -25,9 +25,15 @@ Input:
   sequencingPlatform:               long read sequencing platform: PacBio CLR (-p pb) or Oxford Nanopore (-p ont)
   pipeline:                         which pipeline to run: MetaBooster (-m MetaBooster) or HiFiBooster (-m HiFiBooster)
 
-Options:
-  --threads INT, -t INT:            Number of processes to run in parallel (default: 8).
-  --help, -h:                       Print this help message.
+Options for setting VeChat:
+  --split  BOOL             split target sequences into chunks (default: False)
+  --split-size INT          split target sequences into chunks of desired size in lines, 
+  							only valid when using --split (default: 1000000)
+  --scrub BOOL              scrub chimeric reads (default: False)
+  --base BOOL               perform base level alignment when computing read overlaps in the first cycle of VeChat (default: False)
+  --min-identity-cns FLOAT  minimum sequence identity between read overlaps in the consensus round (default: 0.99)
+  --threads INT, -t INT:    number of processes to run in parallel (default: 8).
+  --help, -h:               print this help message.
 ```
 
 
