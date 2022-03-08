@@ -41,12 +41,12 @@ Options for setting VeChat:
 One can test the `metagenome-asm` program using the small PacBio CLR reads file `example/reads.fa.gz`. 
 - PacBio CLR reads
 ```
-./metagenome-asm -i example/reads.fa.gz -g 49k -o out -p pb 
+./metagenome-asm -i example/reads.fa.gz -g 49k -o out -p pb -m MetaBooster
 ```
 
 - ONT reads
 ```
-./metagenome-asm -i example/reads.fa.gz -g 49k -o out -p ont
+./metagenome-asm -i example/reads.fa.gz -g 49k -o out -p ont 
 ```
 
 In addition, one could run the code on the simulated data of low complexity. Here is the raw reads: https://drive.google.com/file/d/14RGy8yhUtW5GJeY053RCirXIM2njrIQR/view?usp=sharing 
