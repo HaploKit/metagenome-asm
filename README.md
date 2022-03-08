@@ -27,8 +27,7 @@ Input:
 
 Options for setting VeChat:
   --split  BOOL             split target sequences into chunks (default: False)
-  --split-size INT          split target sequences into chunks of desired size in lines, 
-  							only valid when using --split (default: 1000000)
+  --split-size INT          split target sequences into chunks of desired size in lines, only valid when using --split (default: 1000000)
   --scrub BOOL              scrub chimeric reads (default: False)
   --base BOOL               perform base level alignment when computing read overlaps in the first cycle of VeChat (default: False)
   --min-identity-cns FLOAT  minimum sequence identity between read overlaps in the consensus round (default: 0.99)
